@@ -87,6 +87,43 @@ void model_1(void)
 
 /*************************************************************************************/
 
+// Funkcja rysuj¹ca siatkê punktów
+
+void model_2(void)
+{
+    float u, v;
+    glBegin(GL_LINES);
+
+    // Rysowanie siatki jajka
+    for (int i = 0; i < N - 1; i++)
+    {
+        for (int j = 0; j < N - 1; j++)
+        {
+            // Pionowe linie siatki
+            glVertex3f(calculate('x', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j),
+                calculate('y', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j),
+                calculate('z', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j));
+
+            glVertex3f(calculate('x', (1.0 / (N - 1)) * (i + 1), (1.0 / (N - 1)) * j),
+                calculate('y', (1.0 / (N - 1)) * (i + 1), (1.0 / (N - 1)) * j),
+                calculate('z', (1.0 / (N - 1)) * (i + 1), (1.0 / (N - 1)) * j));
+
+            // Poziome linie siatki
+            glVertex3f(calculate('x', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j),
+                calculate('y', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j),
+                calculate('z', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * j));
+
+            glVertex3f(calculate('x', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * (j + 1)),
+                calculate('y', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * (j + 1)),
+                calculate('z', (1.0 / (N - 1)) * i, (1.0 / (N - 1)) * (j + 1)));
+        }
+    }
+
+    glEnd();
+}
+
+/*************************************************************************************/
+
 // Funkcja rysuj¹ca osie uk³adu wspó³rzêdnych
 
 
@@ -160,7 +197,7 @@ void RenderScene(void)
     }
     if (model == 2)
     {
-        
+        model_2();
     }
     if (model == 3)
     {
