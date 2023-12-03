@@ -18,7 +18,9 @@ const double pi = 3.14159265358979323846;
 
 typedef float point3[3];
 
-int N = 20;
+int N = 20; // Iloœæ przedzia³ów boku kwadratu
+
+int model = 1;  // 1- punkty, 2- siatka, 3 - wype³nione trójk¹ty
 
 /*************************************************************************************/
 
@@ -140,7 +142,7 @@ void RenderScene(void)
 
     glLoadIdentity();
     // Czyszczenie macierzy bie¿¹cej
-    //Axes();
+    Axes();
     // Narysowanie osi przy pomocy funkcji zdefiniowanej wy¿ej
     glColor3f(0.0f, 1.0f, 0.0f); 
     // Ustawienie koloru rysowania na bia³y
@@ -150,8 +152,21 @@ void RenderScene(void)
     // Przesuniêcie obiektu wzglêdem osi Y 
     glRotatef(30.0f, 1.0f, 0.0f, 0.0f);  
     // Obrót o 30 stopni
-    // Narysowanie chmury punktów
-    model_1();
+    // Rysowanie modeli
+    if (model == 1)
+    {
+        model_1();
+        // Rysowanie chmury punktów
+    }
+    if (model == 2)
+    {
+        
+    }
+    if (model == 3)
+    {
+
+    }
+    
     glFlush();
     // Przekazanie poleceñ rysuj¹cych do wykonania
 
@@ -220,6 +235,18 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 
 /*************************************************************************************/
 
+// Funkcja obs³uguj¹ca klawisze klawiatury
+void keys(unsigned char key, int x, int y)
+{
+    if (key == 'q') model = 1;
+    if (key == 'w') model = 2;
+    if (key == 'e') model = 3;
+
+    RenderScene(); // przerysowanie obrazu sceny
+}
+
+/*************************************************************************************/
+
 // G³ówny punkt wejœcia programu. Program dzia³a w trybie konsoli
 
 
@@ -234,6 +261,8 @@ void main(int argc, char** argv)
 
     glutCreateWindow("Uk³ad wspó³rzêdnych 3-D");
 
+    glutKeyboardFunc(keys);
+    // W³¹czenie obs³ugi zdarzeñ klawiatury
     glutDisplayFunc(RenderScene);
     // Okreœlenie, ¿e funkcja RenderScene bêdzie funkcj¹ zwrotn¹
     // (callback function).  Bedzie ona wywo³ywana za ka¿dym razem
@@ -246,7 +275,6 @@ void main(int argc, char** argv)
     // inicjalizacje konieczne  przed przyst¹pieniem do renderowania
     glEnable(GL_DEPTH_TEST);
     // W³¹czenie mechanizmu usuwania powierzchni niewidocznych
-
     glutMainLoop();
     // Funkcja uruchamia szkielet biblioteki GLUT
 }
