@@ -24,6 +24,8 @@ int N = 20; // Iloœæ przedzia³ów boku kwadratu
 
 int model = 1;  // 1- punkty, 2- siatka, 3 - wype³nione trójk¹ty
 
+static GLfloat theta[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
+
 /*************************************************************************************/
 
 // Funkcja obliczaj¹ca wspó³rzêdne powierzchni opisanej równaniami parametrycznymi
@@ -34,14 +36,17 @@ float calculate(char xyz, float u, float v)
 
     if (u >= 0 && u <= 1 && v >= 0 && v <= 1)
     {
+        // x(u, v)
         if (xyz == 'x')
         {
             result = (-90.0 * powf(u, 5) + 225.0 * powf(u, 4) - 270.0 * powf(u, 3) + 180.0 * powf(u, 2) - 45.0 * u) * cos(float(pi) * v);
         }
+        // y(u, v)
         else if (xyz == 'y')
         {
             result = (160.0 * powf(u, 4) - 320.0 * powf(u, 3) + 160 * powf(u, 2));
         }
+        // z(u, v)
         else if (xyz == 'z')
         {
             result = (-90.0 * powf(u, 5) + 225.0 * powf(u, 4) - 270.0 * powf(u, 3) + 180.0 * powf(u, 2) - 45.0 * u) * sin(float(pi) * v);
@@ -152,7 +157,7 @@ void model_3(void)
             float u3 = (1.0 / (N - 1)) * (i + 1);
             float v3 = (1.0 / (N - 1)) * (j + 1);
 
-            // Losowy kolor dla trójk¹ta
+            // Losowy kolor
             glColor3f(static_cast<float>(rand()) / RAND_MAX,
                 static_cast<float>(rand()) / RAND_MAX,
                 static_cast<float>(rand()) / RAND_MAX);
@@ -162,7 +167,7 @@ void model_3(void)
             glVertex3f(calculate('x', u1, v1), calculate('y', u1, v1), calculate('z', u1, v1));
             glVertex3f(calculate('x', u2, v2), calculate('y', u2, v2), calculate('z', u2, v2));
 
-            // Losowy kolor dla trójk¹ta
+            // Losowy kolor
             glColor3f(static_cast<float>(rand()) / RAND_MAX,
                 static_cast<float>(rand()) / RAND_MAX,
                 static_cast<float>(rand()) / RAND_MAX);
@@ -177,6 +182,24 @@ void model_3(void)
     glEnd();
 }
 
+/*************************************************************************************/
+
+// Funkcja obracaj¹ca jajko
+
+void spinEgg()
+{
+
+    theta[0] -= 0.5;
+    if (theta[0] > 360.0) theta[0] -= 360.0;
+
+    theta[1] -= 0.5;
+    if (theta[1] > 360.0) theta[1] -= 360.0;
+
+    theta[2] -= 0.5;
+    if (theta[2] > 360.0) theta[2] -= 360.0;
+
+    glutPostRedisplay(); // Odœwie¿enie zawartoœci aktualnego okna
+}
 
 
 /*************************************************************************************/
@@ -240,12 +263,17 @@ void RenderScene(void)
     // Narysowanie osi przy pomocy funkcji zdefiniowanej wy¿ej
     glColor3f(0.0f, 1.0f, 0.0f); 
     // Ustawienie koloru rysowania na bia³y
-    //glutWireTeapot(3.0); 
-    // Narysowanie obrazu czajnika do herbaty
+    glRotatef(theta[0], 1.0, 0.0, 0.0);
+
+    glRotatef(theta[1], 0.0, 1.0, 0.0);
+
+    glRotatef(theta[2], 0.0, 0.0, 1.0);
+
     glTranslatef(0.0f, -4.0f, 0.0f);
     // Przesuniêcie obiektu wzglêdem osi Y 
     glRotatef(30.0f, 1.0f, 0.0f, 0.0f);  
     // Obrót o 30 stopni
+
     // Rysowanie modeli
     if (model == 1)
     {
@@ -255,10 +283,12 @@ void RenderScene(void)
     if (model == 2)
     {
         model_2();
+        // Rysowanie siatki punktów
     }
     if (model == 3)
     {
         model_3();
+        // Rysowanie jajka z³o¿onego z kolorowych trójk¹tów
     }
     
     glFlush();
@@ -355,6 +385,10 @@ void main(int argc, char** argv)
 
     glutCreateWindow("Uk³ad wspó³rzêdnych 3-D");
 
+    cout << "Model 1 (Chmura punktow): q" << endl;
+    cout << "Model 2 (Siatka punktow): w" << endl;
+    cout << "Model 3 (Kolorowe trojkaty): e" << endl;
+
     glutKeyboardFunc(keys);
     // W³¹czenie obs³ugi zdarzeñ klawiatury
     glutDisplayFunc(RenderScene);
@@ -369,6 +403,8 @@ void main(int argc, char** argv)
     // inicjalizacje konieczne  przed przyst¹pieniem do renderowania
     glEnable(GL_DEPTH_TEST);
     // W³¹czenie mechanizmu usuwania powierzchni niewidocznych
+    glutIdleFunc(spinEgg);
+    // W³¹czenie obracania siê jajka
     glutMainLoop();
     // Funkcja uruchamia szkielet biblioteki GLUT
 }
