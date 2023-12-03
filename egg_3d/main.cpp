@@ -11,6 +11,8 @@
 #include <math.h>
 #include "main.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -124,6 +126,61 @@ void model_2(void)
 
 /*************************************************************************************/
 
+// Funkcja rysuj¹ca obiekt w postaci wype³nionych trójk¹tów
+
+void model_3(void)
+{
+    // Inicjalizacja generatora liczb pseudolosowych
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    glBegin(GL_TRIANGLES);
+
+    // Rysowanie trójk¹tów jajka
+    for (int i = 0; i < N - 1; i++)
+    {
+        for (int j = 0; j < N - 1; j++)
+        {
+            float u0 = (1.0 / (N - 1)) * i;
+            float v0 = (1.0 / (N - 1)) * j;
+
+            float u1 = (1.0 / (N - 1)) * (i + 1);
+            float v1 = (1.0 / (N - 1)) * j;
+
+            float u2 = (1.0 / (N - 1)) * i;
+            float v2 = (1.0 / (N - 1)) * (j + 1);
+
+            float u3 = (1.0 / (N - 1)) * (i + 1);
+            float v3 = (1.0 / (N - 1)) * (j + 1);
+
+            // Losowy kolor dla trójk¹ta
+            glColor3f(static_cast<float>(rand()) / RAND_MAX,
+                static_cast<float>(rand()) / RAND_MAX,
+                static_cast<float>(rand()) / RAND_MAX);
+
+            // Pierwszy trójk¹t
+            glVertex3f(calculate('x', u0, v0), calculate('y', u0, v0), calculate('z', u0, v0));
+            glVertex3f(calculate('x', u1, v1), calculate('y', u1, v1), calculate('z', u1, v1));
+            glVertex3f(calculate('x', u2, v2), calculate('y', u2, v2), calculate('z', u2, v2));
+
+            // Losowy kolor dla trójk¹ta
+            glColor3f(static_cast<float>(rand()) / RAND_MAX,
+                static_cast<float>(rand()) / RAND_MAX,
+                static_cast<float>(rand()) / RAND_MAX);
+
+            // Drugi trójk¹t
+            glVertex3f(calculate('x', u1, v1), calculate('y', u1, v1), calculate('z', u1, v1));
+            glVertex3f(calculate('x', u3, v3), calculate('y', u3, v3), calculate('z', u3, v3));
+            glVertex3f(calculate('x', u2, v2), calculate('y', u2, v2), calculate('z', u2, v2));
+        }
+    }
+
+    glEnd();
+}
+
+
+
+/*************************************************************************************/
+
 // Funkcja rysuj¹ca osie uk³adu wspó³rzêdnych
 
 
@@ -201,7 +258,7 @@ void RenderScene(void)
     }
     if (model == 3)
     {
-
+        model_3();
     }
     
     glFlush();
