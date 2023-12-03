@@ -78,6 +78,8 @@ void model_1(void)
         }
     }
 
+    glEnd();
+
     delete[] points;
 }
 
